@@ -8,7 +8,7 @@ module UserImpersonate
     # Display list of all users, except current (staff) user
     # Is this exclusion unnecessary complexity?
     # Normal apps wouldn't bother with this action; rather they would
-    # go straight to GET /impersonate/user/123 (create action)
+    # go straight to POST /impersonate/user/123 (create action)
     def index
       users_table = Arel::Table.new(user_table.to_sym) # e.g. :users
       id_column = users_table[user_id_column.to_sym]   # e.g. users_table[:id]
@@ -23,7 +23,7 @@ module UserImpersonate
     end
     
     # Perform the user impersonate action
-    # GET /impersonate/user/123 
+    # POST /impersonate/user/123 
     def create
       @user = find_user(params[:user_id])
       impersonate(@user)
@@ -31,7 +31,7 @@ module UserImpersonate
     end
     
     # Revert the user impersonation
-    # GET /impersonation/revert
+    # DELETE /impersonation/revert
     def destroy
       unless current_staff_user
         flash[:notice] = "You weren't impersonating anyone"
