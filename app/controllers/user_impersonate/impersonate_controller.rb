@@ -25,9 +25,14 @@ module UserImpersonate
     # Perform the user impersonate action
     # POST /impersonate/user/123 
     def create
-      @user = find_user(params[:user_id])
-      impersonate(@user)
-      redirect_on_impersonate(@user)
+      if current_staff_user        
+        @user = find_user(params[:user_id])
+        impersonate(@user)
+        redirect_on_impersonate(@user)
+      else
+        flash[:error] = "Nested impersonation is not supported."
+        redirect_to :back
+      end
     end
     
     # Revert the user impersonation
